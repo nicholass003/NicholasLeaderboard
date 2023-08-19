@@ -63,7 +63,7 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                     $sender->sendMessage("§a/nicholasleaderboard create <name> <type>");
                     $sender->sendMessage("§a/nicholasleaderboard delete <name> <type>");
                     $sender->sendMessage("§a/nicholasleaderboard list");
-                    $sender->sendMessage("§a/nicholasleaderboard top");
+                    $sender->sendMessage("§a/nicholasleaderboard top <type>");
                     break;
                 case "list":
                     $manager = $this->plugin->getPlayerDataManger();
@@ -83,23 +83,28 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                     } else {
                         $result = "";
                         $all_data = $data->getAll();
+                        
                         if (count($all_data) > 0){
-                            $num = 1;
                             $player_data = [];
-                            foreach ($all_data as $name => $type_data){
-                                $type = $type_data[$args[1]];
-                                $player_data[$type][$name] = $type_data;
-                            }
-                            arsort($player_data);
-                            foreach ($player_data as $value => $players){
-                                foreach ($players as $player_name => $other_data){
-                                    $result .= $manager->getTopFormat($num, $player_name, $args[1], $value) . "\n";
-                                    if ($num >= 10){
-                                        break;
-                                    }
-                                    ++$num;
+                        
+                            foreach ($all_data as $player_name => $data){
+                                if (isset($data[$args[1]])){
+                                    $player_data[$player_name] = $data[$args[1]];
                                 }
                             }
+                        
+                            arsort($player_data);
+                        
+                            $num = 1;
+                            foreach ($player_data as $player_name => $value){
+                                $result .= $manager->getTopFormat($num, $player_name, $args[1], $value) . "\n";
+                                if ($num >= 10){
+                                    break;
+                                }
+                                ++$num;
+                            }
+                        } else {
+                            $sender->sendMessage(T::RED . "Data doesn't exist.");
                         }
                         $sender->sendMessage($result);
                     }

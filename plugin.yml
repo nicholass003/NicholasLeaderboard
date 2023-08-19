@@ -1,0 +1,8 @@
+name: NicholasLeaderboard
+api: 5.0.0
+version: 0.0.1-tester
+main: nicholass003\nicholasleaderboard\NicholasLeaderboard
+author: nicholass003
+permissions:
+  nicholasleaderboard.command:
+    default: op
