@@ -5,4 +5,12 @@ main: nicholass003\nicholasleaderboard\NicholasLeaderboard
 author: nicholass003
 permissions:
   nicholasleaderboard.command:
+    default: true
+  nicholasleaderboard.command.create:
+    default: op
+  nicholasleaderboard.command.delete:
+    default: op
+  nicholasleaderboard.command.entities:
+    default: op
+  nicholasleaderboard.command.list:
     default: op

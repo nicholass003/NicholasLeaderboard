@@ -24,6 +24,10 @@ declare(strict_types=1);
 namespace nicholass003\nicholasleaderboard;
 
 use nicholass003\nicholasleaderboard\commands\NicholasLeaderboardCommand;
+use nicholass003\nicholasleaderboard\entities\EntityManager;
+use nicholass003\nicholasleaderboard\entities\TopNPC;
+use nicholass003\nicholasleaderboard\task\UpdateTask;
+use nicholass003\nicholasleaderboard\utils\TopLeaderboard;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
@@ -32,9 +36,12 @@ class NicholasLeaderboard extends PluginBase
 {
     use SingletonTrait;
 
-    public const PREFIX = "§b[§eNicholasLeaderboard§b]";
+    public const PREFIX = "§6[§eNicholasLeaderboard§6]";
     public static Config $data;
+    public static Config $top_leaderboard_entity;
     public PlayerDataManager $player_data_manager;
+    public TopLeaderboard $top_leaderboard;
+	private string $skinDir;
 
     protected function onLoad() : void
     {
@@ -45,18 +52,29 @@ class NicholasLeaderboard extends PluginBase
     {
         self::setInstance($this);
         self::$data = new Config($this->getDataFolder() . "data.json", Config::JSON);
+        self::$top_leaderboard_entity = new Config($this->getDataFolder() . "top_leaderboard_entity.json", Config::JSON);
 
         $this->player_data_manager = new PlayerDataManager();
         $this->player_data_manager->init($this);
 
+        $this->top_leaderboard = new TopLeaderboard($this);
+
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 
+        $this->getScheduler()->scheduleRepeatingTask(new UpdateTask($this), 20);
+
         $this->registerCommands();
-    }
 
-    protected function onDisable() : void
-    {
+        $entity_manager = new EntityManager();
+        $entity_manager->registerEntity();
 
+        foreach ($this->getServer()->getWorldManager()->getWorlds() as $world){
+            foreach ($world->getEntities() as $entity){
+                if ($entity instanceof TopNPC){
+                    $entity->kill();
+                }
+            }
+        }
     }
 
     private function registerCommands() : void
@@ -67,5 +85,10 @@ class NicholasLeaderboard extends PluginBase
     public function getPlayerDataManger() : PlayerDataManager
     {
         return $this->player_data_manager;
+    }
+
+    public function getTopLeaderboard() : TopLeaderboard
+    {
+        return $this->top_leaderboard;
     }
 }

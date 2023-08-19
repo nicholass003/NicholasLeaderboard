@@ -61,10 +61,11 @@ class PlayerDataManager
         if ($type === self::DATA_XP){
             $config->setNested($name . "." . $type, $xp);
             $config->save();
+        } else {
+            $old_value = $old_data[$type];
+            $config->setNested($name . "." . $type, $old_value + 1);
+            $config->save();
         }
-        $old_value = $old_data[$type];
-        $config->setNested($name . "." . $type, $old_value + 1);
-        $config->save();
     }
 
     public function setPlayerData(Player $player) : void

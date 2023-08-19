@@ -1,2 +1,17 @@
 # NICHOLASLEADERBOARD
-top-message-format: "§f#§a{rank} §e{player} §f{type} {value}"
+# Tag
+# {name} --> NicholasLeaderboard Type ["breaks", "deaths", "jumps", "kills", "xp"]
+# {player} --> Player Name
+# {rank} --> Top Ranks
+# {value} --> Data
+
+# NICHOLASLEADERBOARD FORMAT
+top-message-format: "§f#§a{rank} §e{player} §f{name} {value}"
+
+# TITLE NICHOLASLEADERBOARD FORMAT
+breaks: "§6[§e BREAKS NicholasLeaderboard §6]"
+deaths: "§6[§e DEATHS NicholasLeaderboard §6]"
+jumps: "§6[§e JUMPS NicholasLeaderboard §6]"
+kills: "§6[§e KILLS NicholasLeaderboard §6]"
+places: "§6[§e PLACES NicholasLeaderboard §6]"
+xp: "§6[§e XP NicholasLeaderboard §6]"

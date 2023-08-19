@@ -23,38 +23,79 @@ declare(strict_types=1);
 
 namespace nicholass003\nicholasleaderboard\entities;
 
-use nicholass003\nicholasleaderboard\utils\TextChanger;
 use pocketmine\entity\Human;
+use pocketmine\nbt\tag\CompoundTag;
 
-class TopNPC extends Human implements TextChanger
+class TopNPC extends Human
 {
-    public const ENTITY_TYPE_HUMAN = 0;
-    public const ENTITY_TYPE_TEXT = 1;
-    public string $title = "";
-    public string $text = "";
+    public const ENTITY_TYPE_HUMAN = "human";
+    public const ENTITY_TYPE_TEXT = "text";
 
-    public function getEntityType(int $type) : int
+    public const SCALE_HUMAN = 1.5;
+    public const SCALE_TEXT = 0.00000000001;
+
+    public string $leaderboard_type = "";
+    public string $identifier_type = "";
+
+    public function getName() : string 
     {
-        return $type;
+        return "TopNPC";
     }
 
-    public function getTitle() : string
+    public function initEntity(CompoundTag $nbt) : void 
     {
-        return $this->title;
+        parent::initEntity($nbt);
+        $this->setNameTagAlwaysVisible(true);
+        $this->setNameTagVisible(true);
+        $this->setMaxHealth(10);
     }
 
-    public function setTitle(string $title) : void
+    public function onUpdate(int $currentTick) : bool 
     {
-        $this->title = $title;
+        $this->setMotion($this->getMotion()->withComponents(0, 0, 0));
+        $this->setGravity(0.0);
+
+        if ($this->isOnFire()){
+            $this->extinguish();
+        }
+
+        return parent::onUpdate($currentTick);
     }
 
-    public function getText() : string
+    public function saveNBT() : CompoundTag
     {
-        return $this->text;
+        $nbt = parent::saveNBT();
+        $nbt->setString("type", $this->getEntityTopLeaderboardType());
+        return $nbt;
     }
 
-    public function setText(string $text) : void
+
+    public function getEntityTopLeaderboardType() : string
     {
-        $this->text = $text;
+        return $this->leaderboard_type;
+    }
+
+    public function setEntityTopLeaderboardType(string $type) : void
+    {
+        $this->leaderboard_type = $type;
+    }
+
+    public function getEntityIdentifierType() : string
+    {
+        return $this->identifier_type;
+    }
+
+    public function setEntityIdentifierType(string $identifier) : void
+    {
+        $this->identifier_type = $identifier;
+    }
+
+    public function getEntityScale(string $type) : float
+    {
+        if ($type === self::ENTITY_TYPE_HUMAN){
+            return self::SCALE_HUMAN;
+        } elseif ($type === self::ENTITY_TYPE_TEXT){
+            return self::SCALE_TEXT;
+        }
     }
 }
