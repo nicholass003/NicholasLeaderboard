@@ -63,7 +63,10 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
             switch (strtolower($args[0])){
                 case "create":
                 case "spawn":
-                    if (!$sender->hasPermission("nicholasleaderboard.command.create")) return;
+                    if (!$sender->hasPermission("nicholasleaderboard.command.create")){
+                        $sender->sendMessage(T::RED . "You don't have the permission to use this subcommand!");
+                        return;
+                    }
                     if (!isset($args[1])){
                         $sender->sendMessage(T::RED . "<identifier> is required!");
                         $sender->sendMessage(T::RED . "Usage: /nicholasleaderboard create <identifier> <type>");
@@ -126,7 +129,10 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                 case "delete":
                 case "kill":
                 case "remove":
-                    if (!$sender->hasPermission("nicholasleaderboard.command.delete")) return;
+                    if (!$sender->hasPermission("nicholasleaderboard.command.delete")){
+                        $sender->sendMessage(T::RED . "You don't have the permission to use this subcommand!");
+                        return;
+                    }
                     foreach ($sender->getWorld()->getEntities() as $entity){
                         if (!isset($args[1])){
                             $sender->sendMessage(T::RED . "<identifier> is required!");
@@ -167,10 +173,16 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                     break;
                 case "entities":
                 case "topnpc":
-                    if (!$sender->hasPermission("nicholasleaderboard.command.entities")) return;
+                    if (!$sender->hasPermission("nicholasleaderboard.command.entities")){
+                        $sender->sendMessage(T::RED . "You don't have the permission to use this subcommand!");
+                        return;
+                    }
                     foreach ($sender->getServer()->getWorldManager()->getWorlds() as $world){
                         foreach ($world->getEntities() as $entity){
                             if ($entity instanceof TopNPC){
+                                if ($entity === null){
+                                    $sender->sendMessage(T::YELLOW . "There are no TopNPC entity.");
+                                }
                                 $entity_data = NicholasLeaderboard::$top_leaderboard_entity->getAll();
                                 foreach ($entity_data as $id => $other_data){
                                     $world = $other_data["world"];
@@ -193,7 +205,6 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                     $sender->sendMessage("§a/nicholasleaderboard top <name>");
                     break;
                 case "list":
-                    if (!$sender->hasPermission("nicholasleaderboard.command.list")) return;
                     $manager = $this->plugin->getPlayerDataManger();
                     $sender->sendMessage(NicholasLeaderboard::PREFIX);
                     $sender->sendMessage(T::GREEN . "- " . $manager::DATA_BREAKS);

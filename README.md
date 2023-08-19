@@ -22,6 +22,39 @@ A Simple NicholasLeaderboard Plugin
 - places --> Count player block place
 - xp --> Count player xp
 
+## Type NicholasLeaderboard
+
+- human --> Top Ranks Player ⚠️ Warn: Stil under development
+- text --> Simple FloatingText
+
+## Where i can get custom_id ?
+
+- Case 1 Open plugin_data/NicholasLeaderboard/top_leaderboard_entity.json
+- Case 2 Execute Command /nl entities
+
+## Example Data
+
+```yaml
+{
+  "1": #custom_id
+    {
+      "identifier": "xp",
+      "type": "text",
+      "world": "world",
+      "position":
+        { "x": 284.5861, "y": 68, "z": 260.7183, "yaw": 0, "pitch": 0 },
+    },
+  "2":
+    {
+      "identifier": "kills",
+      "type": "text",
+      "world": "world",
+      "position":
+        { "x": 284.9316, "y": 68, "z": 260.756, "yaw": 0, "pitch": 0 },
+    },
+}
+```
+
 ## Credits
 
 <a target="_blank" href="https://icons8.com/icon/X2Bsuwu66e8y/leaderboard">Leaderboard</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a>
