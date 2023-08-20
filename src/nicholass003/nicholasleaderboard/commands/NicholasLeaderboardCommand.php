@@ -91,7 +91,7 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                                 ->setTag("CapeData", new ByteArrayTag($top_skin->getCapeData()))
                                 ->setTag("GeometryName", new StringTag($top_skin->getGeometryName()))
                                 ->setTag("GeometryData", new ByteArrayTag($top_skin->getGeometryData()))
-                                ->setString('type', '');
+                                ->setString('type', $args[2]);
 
                             $top_entity = new TopNPC(Location::fromObject($sender->getPosition(), $sender->getWorld()), $top_skin, $nbt);
                             $top_entity->setEntityTopLeaderboardType($args[2]);
@@ -114,7 +114,10 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
 
                             $entity_data = NicholasLeaderboard::$top_leaderboard_entity;
                             $num = 1;
-                            if ($entity_data->exists((string) $num)){
+                            if (!$entity_data->exists((string) $num)){
+                                $entity_data->set((string) $num, $entity_data_format);
+                                $entity_data->save();
+                            } else {
                                 ++$num;
                                 $entity_data->set((string) $num, $entity_data_format);
                                 $entity_data->save();

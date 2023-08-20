@@ -5,10 +5,14 @@ main: nicholass003\nicholasleaderboard\NicholasLeaderboard
 author: nicholass003
 permissions:
   nicholasleaderboard.command:
+    description: "Allows to usage NicholasLeaderboard Command"
     default: true
   nicholasleaderboard.command.create:
+    description: "Allows to usage NicholasLeaderboard Create Command"
     default: op
   nicholasleaderboard.command.delete:
+    description: "Allows to usage NicholasLeaderboard Delete Command"
     default: op
   nicholasleaderboard.command.entities:
+    description: "Allows to usage NicholasLeaderboard Entities Command"
     default: op

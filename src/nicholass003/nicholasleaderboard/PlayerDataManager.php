@@ -90,7 +90,7 @@ class PlayerDataManager
 
     public function getTopFormat(int $rank, string $player_name, string $type, int $value) : string
     {
-        return str_replace(["{rank}", "{player}", "{type}", "{value}"], [(string) $rank, $player_name, $type, (string) $value], NicholasLeaderboard::getInstance()->getConfig()->get("top-message-format"));
+        return str_replace(["{rank}", "{player}", "{name}", "{value}"], [(string) $rank, $player_name, $type, (string) $value], NicholasLeaderboard::getInstance()->getConfig()->get("top-message-format"));
     }
 
     public function getDataFormat() : array

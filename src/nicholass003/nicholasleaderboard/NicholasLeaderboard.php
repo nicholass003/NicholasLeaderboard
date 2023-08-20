@@ -41,7 +41,6 @@ class NicholasLeaderboard extends PluginBase
     public static Config $top_leaderboard_entity;
     public PlayerDataManager $player_data_manager;
     public TopLeaderboard $top_leaderboard;
-	private string $skinDir;
 
     protected function onLoad() : void
     {
@@ -67,14 +66,6 @@ class NicholasLeaderboard extends PluginBase
 
         $entity_manager = new EntityManager();
         $entity_manager->registerEntity();
-
-        foreach ($this->getServer()->getWorldManager()->getWorlds() as $world){
-            foreach ($world->getEntities() as $entity){
-                if ($entity instanceof TopNPC){
-                    $entity->kill();
-                }
-            }
-        }
     }
 
     private function registerCommands() : void
