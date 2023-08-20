@@ -46,24 +46,17 @@ class PlayerDataManager
         }, EventPriority::MONITOR, $plugin);
     }
 
-    public function getPlayerData(string $type) : mixed
-    {
-        $config = NicholasLeaderboard::$data;
-        $name = $player->getName();
-        return $config->get($name);
-    }
-
-    public function updatePlayerData(Player $player, string $type, int $xp = 0) : void
+    public function updatePlayerData(Player $player, string $identifier, int $xp = 0) : void
     {
         $config = NicholasLeaderboard::$data;
         $name = $player->getName();
         $old_data = $config->get($name);
-        if ($type === self::DATA_XP){
-            $config->setNested($name . "." . $type, $xp);
+        if ($identifier === self::DATA_XP){
+            $config->setNested($name . "." . $identifier, $xp);
             $config->save();
         } else {
-            $old_value = $old_data[$type];
-            $config->setNested($name . "." . $type, $old_value + 1);
+            $old_value = $old_data[$identifier];
+            $config->setNested($name . "." . $identifier, $old_value + 1);
             $config->save();
         }
     }
@@ -79,18 +72,18 @@ class PlayerDataManager
         }
     }
 
-    public function resetPlayerData(Player $player, string $type) : void
+    public function resetPlayerData(Player $player, string $identifier) : void
     {
         $config = NicholasLeaderboard::$data;
         $name = $player->getName();
         $format = $this->getDataFormat();
-        $config->set($name, $format[$type] * 0);
+        $config->set($name, $format[$identifier] * 0);
         $config->save();
     }
 
-    public function getTopFormat(int $rank, string $player_name, string $type, int $value) : string
+    public function getTopFormat(int $rank, string $player_name, string $identifier, int $value) : string
     {
-        return str_replace(["{rank}", "{player}", "{name}", "{value}"], [(string) $rank, $player_name, $type, (string) $value], NicholasLeaderboard::getInstance()->getConfig()->get("top-message-format"));
+        return str_replace(["{rank}", "{player}", "{identifier}", "{value}"], [(string) $rank, $player_name, $identifier, (string) $value], NicholasLeaderboard::getInstance()->getConfig()->get("top-message-format"));
     }
 
     public function getDataFormat() : array

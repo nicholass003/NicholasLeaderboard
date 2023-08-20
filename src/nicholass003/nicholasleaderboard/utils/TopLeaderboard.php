@@ -26,6 +26,7 @@ namespace nicholass003\nicholasleaderboard\utils;
 use nicholass003\nicholasleaderboard\NicholasLeaderboard;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\utils\Config;
+use pocketmine\utils\TextFormat as T;
 
 class TopLeaderboard
 {
@@ -34,12 +35,23 @@ class TopLeaderboard
         //NOOP
     }
 
+    public function getTopDataPlayerName(string $identifier) : string
+    {
+        $config = NicholasLeaderboard::$data->getAll();
+        $player_name = "";
+        foreach ($config as $name => $other_data){
+            if ($other_data[$identifier] > 0){
+                $player_name = $name;
+            }
+        }
+        return $player_name;
+    }
+
     public function getTopPlayerSkinLeaderboardByType(string $type, Config $data) : CompoundTag
     {
         $player_name = "";
         foreach ($data->getAll() as $name => $stats){
             if ($stats[$type] > 0){
-                $top_stats = $stats[$type];
                 $player_name = $name;
             }
         }

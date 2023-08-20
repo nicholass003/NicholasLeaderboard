@@ -30,7 +30,6 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\entity\Human;
 use pocketmine\entity\Location;
-use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\ByteArrayTag;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\StringTag;
@@ -43,6 +42,7 @@ use pocketmine\world\Position;
 class NicholasLeaderboardCommand extends Command implements PluginOwned
 {
     private array $identifier_entity = ["breaks", "deaths", "jumps", "kills", "places", "xp"];
+    private array $type_entity = ["human", "text"];
 
     public function __construct(private NicholasLeaderboard $plugin)
     {
@@ -78,6 +78,9 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                             if (!in_array($args[1], $this->identifier_entity)){
                                 $sender->sendMessage(T::RED . "Identifier " . $args[1] . " is missing.");
                             }
+                            if (!in_array($args[2], $this->type_entity)){
+                                $sender->sendMessage(T::RED . "type " . $args[2] . " is missing.");
+                            }
                             $top_leaderboard = $this->plugin->getTopLeaderboard();
                             $top = $top_leaderboard->getTopLeaderboardData($args[1]);
 
@@ -102,15 +105,12 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                             $top_entity->setNameTag($title . "\n" . $top);
 
                             $entity_data_format = EntityManager::getEntityFormatData();
-                            $x = $sender->getPosition()->getX();
-                            $y = $sender->getPosition()->getY();
-                            $z = $sender->getPosition()->getZ();
                             $entity_data_format["identifier"] = $args[1];
                             $entity_data_format["type"] = $args[2];
                             $entity_data_format["world"] = $sender->getWorld()->getFolderName();
-                            $entity_data_format["position"]["x"] = $x;
-                            $entity_data_format["position"]["y"] = $y;
-                            $entity_data_format["position"]["z"] = $z;
+                            $entity_data_format["position"]["x"] = $sender->getPosition()->getX();
+                            $entity_data_format["position"]["y"] = $sender->getPosition()->getY();
+                            $entity_data_format["position"]["z"] = $sender->getPosition()->getZ();
 
                             $entity_data = NicholasLeaderboard::$top_leaderboard_entity;
                             $num = 1;
@@ -161,11 +161,16 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                                                 $sender->sendMessage(T::RED . "Usage: /nicholasleaderboard delete <identifier> <type> <id>");
                                             } else {
                                                 $config = NicholasLeaderboard::$top_leaderboard_entity;
-                                                if (!$config->exists($args[1])){
-                                                    $sender->sendMessage(T::RED . "TopNPC with id " . $args[1] . "is missing.");
+                                                if (!$config->exists($args[3])){
+                                                    $sender->sendMessage(T::RED . "TopNPC with id " . $args[3] . " is missing.");
+                                                    return;
+                                                } else {
+                                                    $config->remove($args[3]);
+                                                    $config->save();
+                                                    $entity->kill();
+                                                    $sender->sendMessage(T::GREEN . "TopNPC " . $args[1] . " removed.");
+                                                    return;
                                                 }
-                                                $entity->kill();
-                                                $sender->sendMessage(T::GREEN . "TopNPC " . $args[1] . " removed.");
                                             }
                                         }
                                     }
@@ -180,21 +185,23 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                         $sender->sendMessage(T::RED . "You don't have the permission to use this subcommand!");
                         return;
                     }
+                    $entity_data = NicholasLeaderboard::$top_leaderboard_entity->getAll();
                     foreach ($sender->getServer()->getWorldManager()->getWorlds() as $world){
                         foreach ($world->getEntities() as $entity){
                             if ($entity instanceof TopNPC){
-                                if ($entity === null){
-                                    $sender->sendMessage(T::YELLOW . "There are no TopNPC entity.");
-                                }
-                                $entity_data = NicholasLeaderboard::$top_leaderboard_entity->getAll();
-                                foreach ($entity_data as $id => $other_data){
-                                    $world = $other_data["world"];
-                                    $identifier = $other_data["identifier"];
-                                    $type = $other_data["type"];
-                                    $pos = new Position($other_data["position"]["x"], $other_data["position"]["y"], $other_data["position"]["z"], $this->plugin->getServer()->getWorldManager()->getWorldByName($world));
-                                    if ($entity->getPosition() instanceof $pos){
-                                        $sender->sendMessage(T::GREEN . "TopNPC Custom id: " . $id . ", identifier: " . $identifier . ", type: " . $type . "\n");
+                                    foreach ($entity_data as $id => $other_data){
+                                        $world = $other_data["world"];
+                                        $identifier = $other_data["identifier"];
+                                        $type = $other_data["type"];
+                                        $pos = new Position($other_data["position"]["x"], $other_data["position"]["y"], $other_data["position"]["z"], $this->plugin->getServer()->getWorldManager()->getWorldByName($world));
+                                        if ($entity->getPosition() instanceof $pos){
+                                            $sender->sendMessage(T::GREEN . "TopNPC Custom id: " . $id . ", identifier: " . $identifier . ", type: " . $type . "\n");
+                                        }
                                     }
+                            } else {
+                                if (count($entity_data) == 0){
+                                    $sender->sendMessage(T::YELLOW . "There are no TopNPC entity.");
+                                    return;
                                 }
                             }
                         }
@@ -203,10 +210,13 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                 case "help":
                     $sender->sendMessage(NicholasLeaderboard::PREFIX);
                     $sender->sendMessage("§a/nicholasleaderboard create <name> <type>");
-                    $sender->sendMessage("§a/nicholasleaderboard delete <name> <type>");
+                    $sender->sendMessage("§a/nicholasleaderboard delete <name> <type> <id>");
+                    $sender->sendMessage("§a/nicholasleaderboard help");
                     $sender->sendMessage("§a/nicholasleaderboard list");
                     $sender->sendMessage("§a/nicholasleaderboard top <name>");
+                    $sender->sendMessage("§a/nicholasleaderboard type");
                     break;
+                case "identifier":
                 case "list":
                     $manager = $this->plugin->getPlayerDataManger();
                     $sender->sendMessage(NicholasLeaderboard::PREFIX);
@@ -225,6 +235,15 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                         $top_message = $top_leaderboard->getTopLeaderboardData($args[1]);
                         $sender->sendMessage($top_message);
                     }
+                    break;
+                case "type":
+                    if (!$sender->hasPermission("nicholasleaderboard.command.type")){
+                        $sender->sendMessage(T::RED . "You don't have the permission to use this subcommand!");
+                        return;
+                    }
+                    $sender->sendMessage(NicholasLeaderboard::PREFIX);
+                    $sender->sendMessage(T::GREEN . "- human");
+                    $sender->sendMessage(T::GREEN . "- text");
                     break;
             }
         }

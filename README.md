@@ -41,13 +41,13 @@ A Simple NicholasLeaderboard Plugin
 ```yaml
 # NICHOLASLEADERBOARD
 # Tag
-# {name} --> NicholasLeaderboard Type ["breaks", "deaths", "jumps", "kills", "xp"]
+# {identifier} --> NicholasLeaderboard Type ["breaks", "deaths", "jumps", "kills", "xp"]
 # {player} --> Player Name
 # {rank} --> Top Ranks
 # {value} --> Data
 
 # NICHOLASLEADERBOARD FORMAT
-top-message-format: "§f#§a{rank} §e{player} §f{name} {value}" # Top Leaderboard Format
+top-message-format: "§f#§a{rank} §e{player} §f{identifier} {value}" # Top Leaderboard Format
 
 # TITLE NICHOLASLEADERBOARD FORMAT
 breaks: "§6[§e BREAKS NicholasLeaderboard §6]" # Title of breaks leaderboard
@@ -62,21 +62,12 @@ xp: "§6[§e XP NicholasLeaderboard §6]" # Title of xp leaderboard
 
 ```yaml
 {
-  "1": #custom_id
+  "1":
     {
       "identifier": "xp",
-      "type": "text",
+      "type": "human",
       "world": "world",
-      "position":
-        { "x": 284.5861, "y": 68, "z": 260.7183, "yaw": 0, "pitch": 0 },
-    },
-  "2":
-    {
-      "identifier": "kills",
-      "type": "text",
-      "world": "world",
-      "position":
-        { "x": 284.9316, "y": 68, "z": 260.756, "yaw": 0, "pitch": 0 },
+      "position": { "x": 306.6509, "y": 73, "z": 274.0091 },
     },
 }
 ```

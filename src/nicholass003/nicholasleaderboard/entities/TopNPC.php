@@ -31,7 +31,7 @@ class TopNPC extends Human
     public const ENTITY_TYPE_HUMAN = "human";
     public const ENTITY_TYPE_TEXT = "text";
 
-    public const SCALE_HUMAN = 1.5;
+    public const SCALE_HUMAN = 1.0;
     public const SCALE_TEXT = 0.00000000001;
 
     public string $leaderboard_type = "";

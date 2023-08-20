@@ -25,6 +25,7 @@ namespace nicholass003\nicholasleaderboard\task;
 
 use nicholass003\nicholasleaderboard\entities\TopNPC;
 use nicholass003\nicholasleaderboard\NicholasLeaderboard;
+use pocketmine\entity\Human;
 use pocketmine\scheduler\Task;
 use pocketmine\world\Position;
 
@@ -42,17 +43,27 @@ class UpdateTask extends Task
             foreach ($world->getEntities() as $entity){
                 if ($entity instanceof TopNPC){
                     $entity_data = NicholasLeaderboard::$top_leaderboard_entity->getAll();
+                    if (empty($entity_data)) return;
                     foreach ($entity_data as $id => $other_data){
-                        $world = $other_data["world"];
-                        $identifier = $other_data["identifier"];
-                        $type = $other_data["type"];
-                        $pos = new Position($other_data["position"]["x"], $other_data["position"]["y"], $other_data["position"]["z"], $this->plugin->getServer()->getWorldManager()->getWorldByName($world));
-                        if ($entity->getPosition() instanceof $pos){
-                            $update_top = $top_leaderboard->getTopLeaderboardData($identifier);
-                            $title = $this->plugin->getConfig()->get($identifier);
-                            $scale = $entity->getEntityScale($type);
-                            $entity->setNameTag($title . "\n" . $update_top);
-                            $entity->setScale($scale);
+                        if (isset($id)){
+                            $world = $other_data["world"];
+                            $identifier = $other_data["identifier"];
+                            //test
+                            foreach ($this->plugin->getServer()->getOnlinePlayers() as $player){
+                                $player_name = $top_leaderboard->getTopDataPlayerName($identifier);
+                                $player->sendMessage($player_name);
+                            }
+                            $type = $other_data["type"];
+                            $pos = new Position($other_data["position"]["x"], $other_data["position"]["y"], $other_data["position"]["z"], $this->plugin->getServer()->getWorldManager()->getWorldByName($world));
+                            if ($entity->getPosition() instanceof $pos){
+                                $top_skin = Human::parseSkinNBT($top_leaderboard->getTopPlayerSkinLeaderboardByType($identifier, NicholasLeaderboard::$data));
+                                $update_top = $top_leaderboard->getTopLeaderboardData($identifier);
+                                $title = $this->plugin->getConfig()->get($identifier);
+                                $scale = $entity->getEntityScale($type);
+                                $entity->setNameTag($title . "\n" . $update_top);
+                                $entity->setScale($scale);
+                                $entity->setSkin($top_skin);
+                            }
                         }
                     }
                 }
