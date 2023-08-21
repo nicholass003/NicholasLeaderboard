@@ -16,6 +16,9 @@ permissions:
   nicholasleaderboard.command.entities:
     description: "Allows to usage NicholasLeaderboard Entities Command"
     default: op
+  nicholasleaderboard.command.resetentity:
+    description: "Allows to usage NicholasLeaderboard Reset Entity Command"
+    default: op
   nicholasleaderboard.command.type:
     description: "Allows to usage NicholasLeaderboard Type Command"
     default: op

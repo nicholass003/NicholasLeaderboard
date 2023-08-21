@@ -99,10 +99,18 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                             $top_entity = new TopNPC(Location::fromObject($sender->getPosition(), $sender->getWorld()), $top_skin, $nbt);
                             $top_entity->setEntityTopLeaderboardType($args[2]);
                             $top_entity->setEntityIdentifierType($args[1]);
-                            $top_entity->setScale($top_entity->getEntityScale($args[2]));
                             $top_entity->setNameTagVisible(true);
                             $top_entity->setNameTagAlwaysVisible(true);
-                            $top_entity->setNameTag($title . "\n" . $top);
+                            if ($args[2] === "human"){
+                                $top_entity->setScale($top_entity->getEntityScale($args[2]));
+                                $top_player_data = $top_leaderboard->getTopDataPlayerName($args[1]);
+                                foreach ($top_player_data as $player_name => $player_value){
+                                    $top_entity->setNameTag(str_replace(["{player}", "{identifier}", "{value}"], [$player_name, $args[2], $player_value], $this->plugin->getConfig()->get("player-name-format")));
+                                }
+                            } else {
+                                $top_entity->setScale($top_entity->getEntityScale($args[2]));
+                                $top_entity->setNameTag($title . "\n" . $top);
+                            }
 
                             $entity_data_format = EntityManager::getEntityFormatData();
                             $entity_data_format["identifier"] = $args[1];
@@ -227,12 +235,34 @@ class NicholasLeaderboardCommand extends Command implements PluginOwned
                     $sender->sendMessage(T::GREEN . "- " . $manager::DATA_PLACES);
                     $sender->sendMessage(T::GREEN . "- " . $manager::DATA_XP);
                     break;
+                case "killall":
+                case "resetentity":
+                    if (!$sender->hasPermission("nicholasleaderboard.command.resetentity")){
+                        $sender->sendMessage(T::RED . "You don't have the permission to use this subcommand!");
+                        return;
+                    }
+                    foreach ($this->plugin->getServer()->getWorldManager()->getWorlds() as $world){
+                        foreach ($world->getEntities() as $entity){
+                            if ($entity instanceof TopNPC){
+                                $entity->kill();
+                                $entity_data = NicholasLeaderboard::$top_leaderboard_entity->getAll();
+                                foreach ($entity_data as $id => $other_data){
+                                    $config = NicholasLeaderboard::$top_leaderboard_entity;
+                                    $config->remove((string) $id);
+                                    $config->save();
+                                }
+                                $sender->sendMessage(T::GREEN . "Success kill all TopNPC.");
+                            }
+                        }
+                    }
+                    break;
                 case "top":
                     if (!isset($args[1])){
                         $sender->sendMessage(T::RED . "Usage: /nicholasleaderboard top <identifier>");
                     } else {
                         $top_leaderboard = $this->plugin->getTopLeaderboard();
                         $top_message = $top_leaderboard->getTopLeaderboardData($args[1]);
+                        $sender->sendMessage($this->plugin->getConfig()->get($args[1]));
                         $sender->sendMessage($top_message);
                     }
                     break;

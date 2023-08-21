@@ -6,6 +6,7 @@
 # {value} --> Data
 
 # NICHOLASLEADERBOARD FORMAT
+player-name-format: "§eTop §a#1 §f{player} §bwith {identifier} §f{value}"
 top-message-format: "§f#§a{rank} §e{player} §f{identifier} {value}"
 
 # TITLE NICHOLASLEADERBOARD FORMAT

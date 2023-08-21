@@ -4,6 +4,13 @@
 
 A Simple NicholasLeaderboard Plugin
 
+## Features
+
+| NicholasLeaderboard | Description                                                  |
+| ------------------- | ------------------------------------------------------------ |
+| Friendly Command    | Easy to manage                                               |
+| TopNPC              | Get top 1 player skin with different player every identifier |
+
 ## Command
 
 | Command                | Description                    | Permissions                   | Aliases |
@@ -35,6 +42,12 @@ A Simple NicholasLeaderboard Plugin
 
 - Case 1 Open plugin_data/NicholasLeaderboard/top_leaderboard_entity.json
 - Case 2 Execute Command /nl entities
+
+## TODO List
+
+- [] Can Use Different Type
+- [] Clean and tidy code
+- [] Simple UI NicholasLeaderboard Manager
 
 ## Example Configuration
 

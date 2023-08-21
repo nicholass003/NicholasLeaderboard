@@ -35,16 +35,20 @@ class TopLeaderboard
         //NOOP
     }
 
-    public function getTopDataPlayerName(string $identifier) : string
+    public function getTopDataPlayerName(string $identifier) : array
     {
         $config = NicholasLeaderboard::$data->getAll();
         $player_name = "";
+        $player_value = "";
         foreach ($config as $name => $other_data){
             if ($other_data[$identifier] > 0){
+                $player_value = $other_data[$identifier];
                 $player_name = $name;
             }
         }
-        return $player_name;
+        return [
+            $player_name => $player_value
+        ];
     }
 
     public function getTopPlayerSkinLeaderboardByType(string $type, Config $data) : CompoundTag
@@ -55,7 +59,12 @@ class TopLeaderboard
                 $player_name = $name;
             }
         }
-        return $this->plugin->getServer()->getOfflinePlayerData($player_name);
+        $player = $this->plugin->getServer()->getPlayerByPrefix($player_name);
+        if ($player !== null){
+            return $player->getSaveData();
+        } else {
+            return $this->plugin->getServer()->getOfflinePlayerData($player_name);
+        }
     }
 
     public function getTopLeaderboardData(string $type) : string
