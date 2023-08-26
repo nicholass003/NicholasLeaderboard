@@ -26,6 +26,7 @@ namespace nicholass003\nicholasleaderboard;
 use nicholass003\nicholasleaderboard\commands\NicholasLeaderboardCommand;
 use nicholass003\nicholasleaderboard\entities\EntityManager;
 use nicholass003\nicholasleaderboard\entities\TopNPC;
+use nicholass003\nicholasleaderboard\task\pmmpStats\pmmpStatsTask;
 use nicholass003\nicholasleaderboard\task\UpdateTask;
 use nicholass003\nicholasleaderboard\utils\TopLeaderboard;
 use pocketmine\plugin\PluginBase;
@@ -61,6 +62,7 @@ class NicholasLeaderboard extends PluginBase
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 
         $this->getScheduler()->scheduleRepeatingTask(new UpdateTask($this), 20);
+        $this->getScheduler()->scheduleRepeatingTask(new pmmpStatsTask($this), 120*20);
 
         $this->registerCommands();
 

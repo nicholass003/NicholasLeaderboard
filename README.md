@@ -2,7 +2,12 @@
 
 <center><img src='leaderboard.png' width=150 height=150</img></center>
 
-A Simple NicholasLeaderboard Plugin
+<h1 align="center"><b>NicholasLeaderboard v0.0.1-tester</b> for PocketMine-MP <b>5</b></h1>
+
+<br>
+<img src='https://pmmpstats.xyz/api/v1/static/playersServers?name=NicholasLeaderboard' style='width: 100%'>
+<div align="center"><b>NicholasLeaderboard</b> stats by <a href='https://pmmpstats.xyz'>pmmpStats</a></div>
+<br><br>
 
 ## Features
 
@@ -45,9 +50,9 @@ A Simple NicholasLeaderboard Plugin
 
 ## TODO List
 
-- [] Can Use Different Type
-- [] Clean and tidy code
-- [] Simple UI NicholasLeaderboard Manager
+- [ ] Can Use Different Type
+- [ ] Clean and tidy code
+- [ ] Simple UI NicholasLeaderboard Manager
 
 ## Example Configuration
 
