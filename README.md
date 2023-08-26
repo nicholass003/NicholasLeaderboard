@@ -40,7 +40,7 @@
 
 ## Type NicholasLeaderboard
 
-- human --> Top Ranks Player ⚠️ Warn: Stil under development
+- human --> Top Ranks Player ⚠️ Warn: Still under development
 - text --> Simple FloatingText
 
 ## Where i can get custom_id ?
