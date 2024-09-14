@@ -1,5 +1,7 @@
 <h1>⚠THIS PROJECT HAS BEEN ABANDONED⚠</h1>
 
+# Alternative [TopStats](https://github.com/nicholass003/TopStats) 🏆
+
 ## NicholasLeaderboard
 
 <center><img src='leaderboard.png' width=150 height=150</img></center>
